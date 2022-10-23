@@ -21,6 +21,9 @@ parser.add_argument('--num_epochs', default=5, type=int, help="number of epochs"
 parser.add_argument('--n_epochs_per_eval', default=1, type=int, help="test every n epochs")
 parser.add_argument('--output_dir', default='output', type=str, help="output directory")
 
+# train or eval moed
+parser.add_argument('--model_mode', default='train', type=str, help='Choose model_mode. train or eval')
+
 opt = parser.parse_args()
 print(opt)
 train_model(opt)

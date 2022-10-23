@@ -105,6 +105,7 @@ def train(model, train_set, test_set, opt):
     if not os.path.exists(opt.output_dir):
         os.makedirs(opt.output_dir)
     stats_path = os.path.join(opt.output_dir, "stats_%s_%.2f_%d.json"%(opt.mode, opt.data_used, opt.pretrain != None))
+    pretain_path = os.path.join(opt.output_dir, "trained_model.ckpt")
     stats = {
             'train_accs': [],
             'val_accs': []
@@ -325,7 +326,8 @@ def train(model, train_set, test_set, opt):
             if acc > best_acc:
                 best_acc = acc
                 best_model_wts = deepcopy(model.state_dict())
-
+                print("Saving Model Debug")
+                torch.save(best_model_wts, pretain_path)
             acc = round(acc, 4)
             sym_acc = round(sym_acc, 4)
             stats['val_accs'].append((iter_counter, acc, sym_acc))
