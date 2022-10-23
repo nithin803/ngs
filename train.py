@@ -37,7 +37,7 @@ def find_fix(preds, gts, seq_lens, all_probs, nstep):
         best_fix_list.append(fix)
     return best_fix_list
 
-def evaluate(model, dataloader):
+def evaluate(model, dataloader, opt):
     model.eval() 
     res_all = []
     res_pred_all = []
@@ -58,7 +58,10 @@ def evaluate(model, dataloader):
         selected_probs, preds = torch.max(masked_probs, -1)
         selected_probs = torch.log(selected_probs+1e-12)
         expr_preds, res_preds = eval_expr(preds.data.cpu().numpy(), seq_len)
-        
+        if opt.model_mode =='eval':
+            print("Expression from model:", expr_preds)
+            print("Actual Expression:",expr)
+            print("Result from model:",res_preds)
         res_pred_all.append(res_preds)
         res_all.append(res)
         expr_pred_all.extend(expr_preds)
@@ -112,7 +115,7 @@ def train(model, train_set, test_set, opt):
     }
         
     ###########evaluate init model###########
-    acc, sym_acc = evaluate(model, eval_dataloader)
+    acc, sym_acc = evaluate(model, eval_dataloader, opt)
     print('{0} (Acc={1:.2f}, Symbol Acc={2:.2f})'.format('test', 100*acc, 100*sym_acc))
     print()
     #########################################
@@ -321,7 +324,7 @@ def train(model, train_set, test_set, opt):
         print("Average reward:", reward_moving_average)
             
         if (epoch+1) % n_epochs_per_eval == 0:
-            acc, sym_acc = evaluate(model, eval_dataloader)
+            acc, sym_acc = evaluate(model, eval_dataloader, opt)
             print('{0} (Acc={1:.2f}, Symbol Acc={2:.2f})'.format('test', 100*acc, 100*sym_acc))
             if acc > best_acc:
                 best_acc = acc
@@ -339,7 +342,7 @@ def train(model, train_set, test_set, opt):
             time_elapsed // 60, time_elapsed % 60))
         #print(flush=True)
 
-    acc, sym_acc = evaluate(model, eval_dataloader)
+    acc, sym_acc = evaluate(model, eval_dataloader, opt)
     print('{0} (Acc={1:.2f}, Symbol Acc={2:.2f})'.format('test', 100*acc, 100*sym_acc))
     if acc > best_acc:
         best_acc = acc
