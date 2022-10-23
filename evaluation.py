@@ -57,7 +57,7 @@ def eval_model(opt):
 
     eval_dataloader = torch.utils.data.DataLoader(test_set, batch_size=batch_size,
                                                   shuffle=False, num_workers=num_workers, collate_fn=MathExpr_collate)
-    acc, sym_acc = evaluate(model, eval_dataloader)
+    acc, sym_acc = evaluate(model, eval_dataloader, opt)
     print('{0} (Acc={1:.2f}, Symbol Acc={2:.2f})'.format('test', 100 * acc, 100 * sym_acc))
 
 opt = parser.parse_args()
