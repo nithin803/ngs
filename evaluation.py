@@ -34,9 +34,8 @@ parser.add_argument('--model_path', default='output/trained_model.ckpt', type=st
 def eval_model(opt):
     np.random.seed(opt.random_seed)
     torch.manual_seed(opt.manual_seed)
-    train_set = MathExprDataset('train', numSamples=int(10000*opt.data_used), randomSeed=777)
     test_set = MathExprDataset('test')
-    print('train:', len(train_set), '  test:', len(test_set))
+    print('test:', len(test_set))
     model = NNAOG().to(device)
     model.load_state_dict(torch.load(opt.model_path))
     model.eval()
